@@ -1,0 +1,25 @@
+{
+  "name": "rent-a-ride",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joaoPires04/rent-a-ride.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joaoPires04/rent-a-ride/issues"
+  },
+  "homepage": "https://github.com/joaoPires04/rent-a-ride#readme",
+  "description": "",
+  "dependencies": {
+    "@azure/cosmos": "^4.3.0",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0"
+  }
+}
