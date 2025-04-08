@@ -90,27 +90,42 @@
         </div>
     </nav>
 
+    <!--
+    <header style="background-color: black; padding: 20px 0;">
+        <div class="container text-center">
+            <h2 style="color: white">Que carro quer conduzir hoje?</h2>
+            <form method="get" action="pesquisaCarros.html">
+                <div class="row mb-5">
+                    <div class="col-md-12">
+                        <input type="text" name="tipo" class="form-control" placeholder="Citadino, SUV, Desportivo, etc...">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <input type="text" name="ponto_recolha" class="form-control" placeholder="Ponto de recolha">
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <input type="submit" class="btn btn-primary w-100" value="Pesquisar">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </header>
+    -->
+
     <header>
         <div class="background-image"></div>
         <div class="frase">
-            <h1 class="frase-texto">Que carro quer conduzir hoje?</h1>
+            <h2 class="frase-texto">Que carro quer conduzir hoje?</h2>
         </div>
         <div class="container">
-            <div class="row">
-                <div class="col-xs-12 pesquisa">
-                    <div class="barraCima">
-                        <input class="form-control input-lg" id="inputlg" type="text" placeholder="SUV, Audi, Desportivo">
-                    </div>
+            <div class="col-xs-12 pesquisa barraCima">
+                <input class="form-control input-lg" id="inputlg" type="text" placeholder="SUV, Audi, Desportivo">
+            </div>
                     <div class="barraBaixo">
-                        <div class="col-xs-6">
-                            <label for="inputmd">Entrega:</label>
-                            <input class="form-control input-md" id="inputmd" type="text" placeholder="Local de entrega">
-                        </div>
-                        <div class="col-xs-6">
-                            <label for="inputmd">Recolha:</label>
-                            <input class="form-control input-md" id="inputlmd" type="text" placeholder="Data de entrega">
-                        </div>
-                    </div>
+            <div class="col-xs-6 pesquisa">
+                <input class="form-control input-md" id="inputmd" type="text" placeholder="Local de recolha">
+            </div>
                 </div>
             </div>
             <div class="pesquisar-btn">
@@ -118,7 +133,7 @@
             </div>
         </div>
     </header>
-
+~
     <div class="container" id="car-container">
         <script>
             window.onload = function() {

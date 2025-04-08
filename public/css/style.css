@@ -117,10 +117,9 @@ header {
 
 .pesquisar-btn {
     position: relative;
-    top: 50%;
-    right: 0;
+    right: 0px;
     transform: translateY(-50%);
-    height: 40px;
+    height: 0px;
 }
 
 .pesquisar-btn button {
@@ -208,5 +207,5 @@ header {
 
 .btn.btn-primary.btn-detalhes:hover {
     background-color: #286090;
-    border-color: #204d74;
+    border-color: #204d74;
 }
