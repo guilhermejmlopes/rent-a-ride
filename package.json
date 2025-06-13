@@ -1,7 +1,7 @@
 {
-  "name": "otario_bank_node",
+  "name": "rent-a-ride",
   "version": "1.0.0",
-  "description": "vulnerable website for educational purposes",
+  "description": "RENT-A-RIDE",
   "main": "index.js",
   "author": "",
   "license": "ISC",
