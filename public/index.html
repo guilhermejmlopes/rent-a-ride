@@ -101,7 +101,7 @@
 				containerCarros.innerHTML = '';
 
 				if (carros.length === 0) {
-					containerCarros.innerHTML = '<h3 class="text-center mt-4">Não estão disponíveis carros de momento.</h3>';
+					containerCarros.innerHTML = '<h3 style="text-align: center; margin-top: 4vh;">Não estão disponíveis carros de momento.</h3>';
 					return;
 				}
 
@@ -109,36 +109,54 @@
 					// Criar uma nova linha a cada 3 carros
 					if (index % 3 === 0) {
 						const row = document.createElement('div');
-						row.className = 'row justify-content-center mb-4';
+						row.style.display = 'flex';
+						row.style.justifyContent = 'center';
+						row.style.flexWrap = 'wrap';
+						row.style.marginBottom = '40px';
 						containerCarros.appendChild(row);
 					}
 
 					const lastRow = containerCarros.lastElementChild;
 
-					const cardCol = document.createElement('div');
-					cardCol.className = 'col-md-4 d-flex justify-content-center mb-4';
+					const cardWrapper = document.createElement('div');
+					cardWrapper.style.margin = '10px';
 
-					cardCol.innerHTML = `
-						<div class="card h-100 shadow-sm" style="width: 300px;">
-							<img src="img/carros/${carro.imagem}" 
-								class="card-img-top rounded-top" 
-								style="height: 200px; object-fit: cover;" 
-								alt="${carro.modelo}">
-							<div class="card-body text-center">
-								<h5 class="card-title">${carro.modelo}</h5>
-								<p class="card-text">Tipo: ${carro.tipo}</p>
-								<a href="carro.html?id=${carro.id}" class="btn btn-primary btn-sm">Saber mais</a>
-							</div>
+					const card = document.createElement('div');
+					card.style.width = '300px';
+					card.style.border = '1px solid #ddd';
+					card.style.borderRadius = '8px';
+					card.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+					card.style.overflow = 'hidden';
+					card.style.transition = 'transform 0.2s ease';
+					card.style.backgroundColor = '#fff';
+
+					card.onmouseover = () => card.style.transform = 'scale(1.03)';
+					card.onmouseout = () => card.style.transform = 'scale(1)';
+
+					card.innerHTML = `
+						<img src="img/carros/${carro.imagem}" 
+							alt="${carro.modelo}" 
+							style="width: 100%; height: 200px; object-fit: cover; display: block;">
+						<div style="padding: 16px; text-align: center;">
+							<h5 style="margin: 0 0 10px 0; font-size: 18px;">${carro.modelo}</h5>
+							<p style="margin: 0 0 15px 0;">Tipo: ${carro.tipo}</p>
+							<a href="carro.html?id=${carro.id}" 
+							style="display: inline-block; padding: 6px 12px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 4px; font-size: 14px;">
+								Saber mais
+							</a>
 						</div>
 					`;
-					lastRow.appendChild(cardCol);
+
+					cardWrapper.appendChild(card);
+					lastRow.appendChild(cardWrapper);
 				});
 			} catch (error) {
 				console.error('Erro ao carregar os carros:', error);
 			}
 		};
 	</script>
-	
+
+
 	<div style="height: 40px;"></div>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
