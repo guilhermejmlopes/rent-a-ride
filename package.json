@@ -1,0 +1,11 @@
+{
+  "name": "otario_bank_node",
+  "version": "1.0.0",
+  "description": "vulnerable website for educational purposes",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
