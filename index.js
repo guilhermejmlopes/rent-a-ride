@@ -14,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/imagens', express.static(path.join(__dirname, 'imagens')));
 
+/*
 // Cosmos DB Config
 const endpoint = process.env.COSMOS_DB_ENDPOINT;
 const key = process.env.COSMOS_DB_KEY;
@@ -113,6 +114,7 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ message: "Erro interno." });
     }
 });
+*/
 
 // O index.html será servido automaticamente por express.static
 
