@@ -79,68 +79,66 @@
 		window.onload = async function () {
 			// Carregar os tipos de carro
 			try {
-			const responseTipos = await fetch('/tipos_carro');
-			const tiposCarro = await responseTipos.json();
-			const containerTipos = document.getElementById('tipos-carro-container');
-			
-			tiposCarro.forEach(tipoCarro => {
-				const option = document.createElement('option');
-				option.value = tipoCarro.id;
-				option.textContent = tipoCarro.nome;
-				containerTipos.appendChild(option);
-			});
+				const responseTipos = await fetch('/tipos_carro');
+				const tiposCarro = await responseTipos.json();
+				const containerTipos = document.getElementById('tipos-carro-container');
+
+				tiposCarro.forEach(tipoCarro => {
+					const option = document.createElement('option');
+					option.value = tipoCarro.id;
+					option.textContent = tipoCarro.nome;
+					containerTipos.appendChild(option);
+				});
 			} catch (error) {
-			console.error('Erro ao carregar os tipos de carro:', error);
+				console.error('Erro ao carregar os tipos de carro:', error);
 			}
-		
+
 			// Carregar os carros
 			try {
-			const responseCarros = await fetch('/carros');
-			const carros = await responseCarros.json();
-			const containerCarros = document.getElementById('carros-container');
-			containerCarros.innerHTML = '';
-		
-			if (carros.length === 0) {
-				containerCarros.innerHTML = '<h3 style="margin-top: 3vh;">Não estão disponíveis carros de momento.</h3>';
-				return;
-			}
-		
-			carros.forEach((carro, index) => {
-				// Criar novo "row" a cada 3 carros
-				if (index % 3 === 0) {
-					const row = document.createElement('div');
-					row.className = 'row justify-content-center mb-5';
-					containerCarros.appendChild(row);
+				const responseCarros = await fetch('/carros');
+				const carros = await responseCarros.json();
+				const containerCarros = document.getElementById('carros-container');
+				containerCarros.innerHTML = '';
+
+				if (carros.length === 0) {
+					containerCarros.innerHTML = '<h3 class="text-center mt-4">Não estão disponíveis carros de momento.</h3>';
+					return;
 				}
-		
-				const lastRow = containerCarros.lastElementChild;
-		
-				const card = document.createElement('div');
-				card.className = 'card rounded-3 shadow-sm';
-				card.style.height = '50vh';
-				card.style.width = '50vh';
-				card.style.marginLeft = '25px';
-				card.style.marginRight = '25px'
-		
-				card.innerHTML = `
-					<img src="img/carros/${carro.imagem}" 
-					class="card-img-top mt-3 rounded" style="width: 100%; height: 200px; object-fit: cover;" alt="${carro.modelo}">
-					<div class="card-body">
-						<h5 class="card-title">${carro.modelo}</h5>
-						<p>Tipo: ${carro.tipo}</p>
-						<a href="carro.html?id=${carro.id}">Saber mais</a>
-					</div>
-				`;
-		
-				lastRow.appendChild(card);
-			});
-		
+
+				carros.forEach((carro, index) => {
+					// Criar uma nova linha a cada 3 carros
+					if (index % 3 === 0) {
+						const row = document.createElement('div');
+						row.className = 'row justify-content-center mb-4';
+						containerCarros.appendChild(row);
+					}
+
+					const lastRow = containerCarros.lastElementChild;
+
+					const cardCol = document.createElement('div');
+					cardCol.className = 'col-md-4 d-flex justify-content-center mb-4';
+
+					cardCol.innerHTML = `
+						<div class="card h-100 shadow-sm" style="width: 300px;">
+							<img src="img/carros/${carro.imagem}" 
+								class="card-img-top rounded-top" 
+								style="height: 200px; object-fit: cover;" 
+								alt="${carro.modelo}">
+							<div class="card-body text-center">
+								<h5 class="card-title">${carro.modelo}</h5>
+								<p class="card-text">Tipo: ${carro.tipo}</p>
+								<a href="carro.html?id=${carro.id}" class="btn btn-primary btn-sm">Saber mais</a>
+							</div>
+						</div>
+					`;
+					lastRow.appendChild(cardCol);
+				});
 			} catch (error) {
 				console.error('Erro ao carregar os carros:', error);
 			}
 		};
 	</script>
-
+	
 	<div style="height: 40px;"></div>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
