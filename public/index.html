@@ -1,48 +1,156 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1-transitional.dtd">
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-
-<head>
-
-<link rel="stylesheet" type="text/css" href="styles.css">
-
-<script src="jquery-3.3.1.min.js"></script>
-
-<title>Insecure Bank - Login Page</title>
-
+	<meta charset="UTF-8">
+	<title>RENT-A-RIDE</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap.css">
 </head>
 
-
-
-<script>
-
-$(document).ready(function() {
-
-    $("#auth").hide().fadeIn(1000);
-
-});
-
-</script>
-
-<h1>Welcome to Insecure Bank (Node.JS version)</h1>
-
-
-<div id="auth" class="auth_div">
-	<form action="" method="post">
-		<label>UserName</label>
-		<input id="username" type="text" name="username" class="box"/><br /><br />
-
-		<label>Password</label>
-		<input  id="password" type="password" name="password" class="box" /><br/><br />
-
-		<input class="login_button" type="submit" value=" Login "/><br />
-
-	</form>
+<body style="background-color: #C5C6D0;">
+	<nav class="fixed-top navbar navbar-expand-lg" style="background-color: #111111; border: none;" data-bs-theme="dark">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="index.html">RENT-A-RIDE</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarColor01">
+				<ul class="navbar-nav me-auto">
+					<li class="nav-item">
+						<a class="nav-link active" href="index.html">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="sobrenos.html">Sobre nós</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="faq.html">FAQ</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="contactos.html">Contactos</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav ms-auto">
+					<!--
+					<li class="nav-item"><a class="nav-link" href="logout.php">Sair</a></li>
+					<li class="nav-item"><a class="nav-link" href="login.html">Dados pessoais</a></li>
+					-->
+					<li class="nav-item"><a class="nav-link" href="login.html">Login/Registo</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
 	
-</div>
+	<div style="height: 80px;"></div>
+
+	<div class="container-fluid py-5" style="background-color: #111111; color: white;">
+		<h1 class="text-center mb-4" style="color: white;">Que carro quer conduzir hoje?</h1>
+		<div class="container">
+			<form>
+				<div class="row mb-4">
+					<div class="col-md-4 mb-2 mb-md-0">
+						<select class="form-select" id="tipos-carro-container">
+							<option selected disabled>Tipo de carro</option>
+						</select>
+					</div>
+					<div class="col-md-8">
+						<input type="text" class="form-control" placeholder="Modelo do carro (ex.: Renault 4L)">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-9 mb-3">
+						<input type="text" class="form-control" placeholder="Local de recolha (ex.: Avenida do Empresário)">
+					</div>
+					<div class="col-md-3 mb-3 text-end">
+						<button type="submit" class="btn btn-primary w-100" style="border: 1px solid white;">Pesquisar</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="card" style="background-color: #C5C6D0; border: none; padding: 3vh;">
+		<div class="card-body text-center">
+			<div class="row mb-3"><h1>Carros</h1></div>
+			<div id="carros-container" class="row justify-content-center"></div>
+		</div>
+	</div>
+
+		<script>
+			window.onload = async function () {
+				// Carregar os tipos de carro
+				try {
+				const responseTipos = await fetch('/tipos_carro');
+				const tiposCarro = await responseTipos.json();
+				const containerTipos = document.getElementById('tipos-carro-container');
+				
+				tiposCarro.forEach(tipoCarro => {
+					const option = document.createElement('option');
+					option.value = tipoCarro.id;
+					option.textContent = tipoCarro.nome;
+					containerTipos.appendChild(option);
+				});
+				} catch (error) {
+				console.error('Erro ao carregar os tipos de carro:', error);
+				}
+			
+				// Carregar os carros
+				try {
+				const responseCarros = await fetch('/carros');
+				const carros = await responseCarros.json();
+				const containerCarros = document.getElementById('carros-container');
+				containerCarros.innerHTML = '';
+			
+				if (carros.length === 0) {
+					containerCarros.innerHTML = '<h3 style="margin-top: 3vh;">Não estão disponíveis carros de momento.</h3>';
+					return;
+				}
+			
+				carros.forEach((carro, index) => {
+					// Criar novo "row" a cada 3 carros
+					if (index % 3 === 0) {
+					const row = document.createElement('div');
+					row.className = 'row justify-content-center mb-5';
+					containerCarros.appendChild(row);
+					}
+			
+					const lastRow = containerCarros.lastElementChild;
+			
+					const card = document.createElement('div');
+					card.className = 'card rounded-3 shadow-sm';
+					card.style.height = '50vh';
+					card.style.width = '50vh';
+					card.style.marginLeft = '25px';
+					card.style.marginRight = '25px'
+			
+					card.innerHTML = `
+						<img src="imagens/carros/${carro.imagem}" 
+						class="card-img-top mt-3 rounded" style="width: 100%; height: 200px; object-fit: cover;" alt="${carro.modelo}">
+						<div class="card-body">
+							<h5 class="card-title">${carro.modelo}</h5>
+							<p>Tipo: ${carro.tipo}</p>
+							<a href="carro.html?id=${carro.id}">Saber mais</a>
+						</div>
+					`;
+			
+					lastRow.appendChild(card);
+				});
+			
+				} catch (error) {
+					console.error('Erro ao carregar os carros:', error);
+				}
+			};
+		</script>
+	</div>
+
+	<div style="height: 40px;"></div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<footer class="fixed-bottom" style="background-color: #111111; border: none;">
+		<div class="row text-center" style="margin: 3vh 0 3vh; color: white;">
+			<div class="col">Gabriel Charro</div>
+			<div class="col">Guilherme Lopes</div>
+			<div class="col">João Pires</div>
+		</div>
+	</footer>
 </body>
 </html>
