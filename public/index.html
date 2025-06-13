@@ -115,15 +115,14 @@
 						row.style.marginBottom = '40px';
 						containerCarros.appendChild(row);
 					}
-
 					const lastRow = containerCarros.lastElementChild;
 
 					const cardWrapper = document.createElement('div');
-					cardWrapper.style.margin = '10px';
+					cardWrapper.style.margin = '20px';
 
 					const card = document.createElement('div');
 					card.className = 'card rounded-3 shadow-sm';
-					card.style.width = '500px';
+					card.style.width = '400px';
 					card.style.border = '1px solid #ddd';
 					card.style.overflow = 'hidden';
 					card.style.transition = 'transform 0.2s ease';
@@ -142,7 +141,6 @@
 							</a>
 						</div>
 					`;
-
 					cardWrapper.appendChild(card);
 					lastRow.appendChild(cardWrapper);
 				});
