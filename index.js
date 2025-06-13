@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 // Cosmos DB Config
-// const { CosmosClient } = require('@azure/cosmos');
+const { CosmosClient } = require('@azure/cosmos');
 const endpoint = process.env.COSMOS_DB_ENDPOINT;
 const key = process.env.COSMOS_DB_KEY;
 const client = new CosmosClient({ endpoint, key });
