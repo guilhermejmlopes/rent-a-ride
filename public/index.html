@@ -79,15 +79,15 @@
 		window.onload = async function () {
 			// Carregar os tipos de carro
 			try {
-				const responseTipos = await fetch('/tipos_carro');
-				const tiposCarro = await responseTipos.json();
-				const containerTipos = document.getElementById('tipos-carro-container');
+				const responseTiposCarro = await fetch('/tipos_carro');
+				const tiposCarro = await responseTiposCarro.json();
+				const containerTiposCarro = document.getElementById('tipos-carro-container');
 
-				tiposCarro.forEach(tipoCarro => {
+				tiposCarro.forEach(tipo => {
 					const option = document.createElement('option');
-					option.value = tipoCarro.id;
-					option.textContent = tipoCarro.nome;
-					containerTipos.appendChild(option);
+					option.value = tipo.id;
+					option.textContent = tipo.nome;
+					containerTiposCarro.appendChild(option);
 				});
 			} catch (error) {
 				console.error('Erro ao carregar os tipos de carro:', error);
@@ -122,16 +122,12 @@
 					cardWrapper.style.margin = '10px';
 
 					const card = document.createElement('div');
-					card.style.width = '300px';
+					card.className = 'card rounded-3 shadow-sm';
+					card.style.width = '500px';
 					card.style.border = '1px solid #ddd';
-					card.style.borderRadius = '8px';
-					card.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
 					card.style.overflow = 'hidden';
 					card.style.transition = 'transform 0.2s ease';
 					card.style.backgroundColor = '#fff';
-
-					card.onmouseover = () => card.style.transform = 'scale(1.03)';
-					card.onmouseout = () => card.style.transform = 'scale(1)';
 
 					card.innerHTML = `
 						<img src="img/carros/${carro.imagem}" 
