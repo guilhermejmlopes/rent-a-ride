@@ -2,33 +2,30 @@ const express = require('express');
 const path = require('path');
 require('dotenv').config();
 const { CosmosClient } = require('@azure/cosmos');
+const cors = require('cors');
+
 const app = express();
 const port = 3000;
-const cors = require('cors');
-app.use(cors());
 
-// Configurações do CosmosDB
+// Middlewares
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/imagens', express.static(path.join(__dirname, 'imagens')));
+
+// Cosmos DB Config
 const endpoint = process.env.COSMOS_DB_ENDPOINT;
 const key = process.env.COSMOS_DB_KEY;
 const client = new CosmosClient({ endpoint, key });
 
-// Base de dados
 const databaseId = "rent-a-ride";
-// Containers
-const carrosContainerId = "carros";
-const tiposCarroContainerId = "tipos_carro";
-const tiposCombustivelContainerId = "tipos_combustivel";
-const utilizadoresContainerId = "utilizadores";
+const carrosContainer = client.database(databaseId).container("carros");
+const tiposCarroContainer = client.database(databaseId).container("tipos_carro");
+const tiposCombustivelContainer = client.database(databaseId).container("tipos_combustivel");
+const utilizadoresContainer = client.database(databaseId).container("utilizadores");
 
-const carrosContainer = client.database(databaseId).container(carrosContainerId);
-const tiposCarroContainer = client.database(databaseId).container(tiposCarroContainerId);
-const tiposCombustivelContainer = client.database(databaseId).container(tiposCombustivelContainerId);
-const utilizadoresContainer = client.database(databaseId).container(utilizadoresContainerId);
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/imagens', express.static(path.join(__dirname, 'imagens')));
-
-// Endpoint - /carros
+// Endpoint - Todos os carros
 app.get('/carros', async (req, res) => {
     try {
         const carrosQuery = { query: "SELECT * FROM carros" };
@@ -40,9 +37,10 @@ app.get('/carros', async (req, res) => {
         const { resources: combustiveis } = await tiposCombustivelContainer.items.query(tiposCombustivelQuery).fetchAll();
 
         for (let carro of carros) {
-            const tipo = tiposCarro.find(tipo => tipo.id === carro.tipo);
-            if (tipo)
-                carro.tipo = tipo.nome;
+            const tipo = tiposCarro.find(t => t.id === carro.tipo);
+            const combustivel = combustiveis.find(c => c.id === carro.combustivel);
+            if (tipo) carro.tipo = tipo.nome;
+            if (combustivel) carro.combustivel = combustivel.nome;
         }
 
         res.json(carros);
@@ -52,7 +50,30 @@ app.get('/carros', async (req, res) => {
     }
 });
 
-// Endpoint - /tipos_carro
+// Endpoint - Carro por ID
+app.get('/carros/:id', async (req, res) => {
+    const { id } = req.params;
+
+    const query = {
+        query: "SELECT * FROM c WHERE c.id = @id",
+        parameters: [{ name: "@id", value: id }]
+    };
+
+    try {
+        const { resources: carros } = await carrosContainer.items.query(query).fetchAll();
+
+        if (carros.length === 0) {
+            return res.status(404).json({ message: "Carro não encontrado" });
+        }
+
+        return res.json(carros[0]);
+    } catch (error) {
+        console.error("Erro ao buscar carro:", error);
+        return res.status(500).json({ message: "Erro interno." });
+    }
+});
+
+// Endpoint - Tipos de carro
 app.get('/tipos_carro', async (req, res) => {
     try {
         const tiposCarroQuery = { query: "SELECT * FROM tipos_carro" };
@@ -64,12 +85,7 @@ app.get('/tipos_carro', async (req, res) => {
     }
 });
 
-// Body parser
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Endpoint - /login
+// Endpoint - Login
 app.post('/login', async (req, res) => {
     const { user, pwd } = req.body;
 
@@ -98,30 +114,9 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/carros', async (req, res) => {
-    const { id } = req.query;
+// O index.html será servido automaticamente por express.static
 
-    // Aqui você busca o carro na sua base de dados
-    const query = {
-        query: "SELECT * FROM c WHERE c.id = @id",
-        parameters: [{ name: "@id", value: id }]
-    };
-
-    try {
-        const { resources: carros } = await carrosContainer.items.query(query).fetchAll();
-
-        if (carros.length === 0) {
-            return res.status(404).json({ message: "Carro não encontrado" });
-        }
-
-        return res.json(carros[0]);
-    } catch (error) {
-        console.error("Erro ao buscar carro:", error);
-        return res.status(500).json({ message: "Erro interno." });
-    }
-});
-
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+// Inicia o servidor
+app.listen(port, () => {
+    console.log(`Servidor a correr em http://localhost:${port}`);
 });
