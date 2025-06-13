@@ -1,11 +1,11 @@
 const express = require('express');
 const path = require('path');
 require('dotenv').config();
-const { CosmosClient } = require('@azure/cosmos');
+// const { CosmosClient } = require('@azure/cosmos');
 const cors = require('cors');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Middlewares
 app.use(cors());
