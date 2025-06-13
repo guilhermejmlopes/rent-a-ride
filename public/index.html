@@ -123,10 +123,14 @@
 					const card = document.createElement('div');
 					card.className = 'card rounded-3 shadow-sm';
 					card.style.width = '400px';
+					card.style.height = '520px'; // altura aumentada
 					card.style.border = '1px solid #ddd';
 					card.style.overflow = 'hidden';
 					card.style.transition = 'transform 0.2s ease';
 					card.style.backgroundColor = '#fff';
+
+					card.onmouseover = () => card.style.transform = 'scale(1.03)';
+					card.onmouseout = () => card.style.transform = 'scale(1)';
 
 					card.innerHTML = `
 						<img src="img/carros/${carro.imagem}" 
@@ -136,11 +140,12 @@
 							<h5 style="margin: 0 0 10px 0; font-size: 18px;">${carro.modelo}</h5>
 							<p style="margin: 0 0 15px 0;">Tipo: ${carro.tipo}</p>
 							<a href="carro.html?id=${carro.id}" 
-							style="display: inline-block; padding: 6px 12px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 4px; font-size: 14px;">
+							class="btn btn-primary btn-sm">
 								Saber mais
 							</a>
 						</div>
 					`;
+
 					cardWrapper.appendChild(card);
 					lastRow.appendChild(cardWrapper);
 				});
