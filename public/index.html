@@ -123,14 +123,10 @@
 					const card = document.createElement('div');
 					card.className = 'card rounded-3 shadow-sm';
 					card.style.width = '400px';
-					card.style.height = '520px'; // altura aumentada
+					card.style.height = '520px';
 					card.style.border = '1px solid #ddd';
 					card.style.overflow = 'hidden';
-					card.style.transition = 'transform 0.2s ease';
 					card.style.backgroundColor = '#fff';
-
-					card.onmouseover = () => card.style.transform = 'scale(1.03)';
-					card.onmouseout = () => card.style.transform = 'scale(1)';
 
 					card.innerHTML = `
 						<img src="img/carros/${carro.imagem}" 
@@ -154,7 +150,6 @@
 			}
 		};
 	</script>
-
 
 	<div style="height: 40px;"></div>
 
