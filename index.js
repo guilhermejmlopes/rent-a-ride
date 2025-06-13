@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+require('dotenv').config();
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -16,7 +17,7 @@ app.get('/', (req, res) => {
 
 // Cosmos DB Config
 const { CosmosClient } = require('@azure/cosmos');
-const endpoint = "https://cosmos-rent-a-ride.documents.azure.com:443";
+const endpoint = "https://cosmos-rent-a-ride.documents.azure.com:443/";
 const key = "gGZKSspnBakRE7tHb0iBZfVI0FhfHH7VvPnPQMNgTEx1CQrvqpgiTiWD42qNtwhyFtTvM3tBTQcKACDbthFVoQ==";
 const client = new CosmosClient({ endpoint, key });
 
