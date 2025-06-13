@@ -123,15 +123,16 @@
 					const card = document.createElement('div');
 					card.className = 'card rounded-3 shadow-sm';
 					card.style.width = '400px';
-					card.style.height = '520px';
 					card.style.border = '1px solid #ddd';
 					card.style.overflow = 'hidden';
 					card.style.backgroundColor = '#fff';
 
 					card.innerHTML = `
-						<img src="img/carros/${carro.imagem}" 
-							alt="${carro.modelo}" 
-							style="width: 100%; height: 200px; object-fit: cover; display: block;">
+						<div style="overflow: hidden; width: 100%; height: 200px; display: flex; justify-content: center; align-items: center;">
+							<img src="img/carros/${carro.imagem}" 
+								alt="${carro.modelo}" 
+								style="width: 80%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;">
+						</div>
 						<div style="padding: 16px; text-align: center;">
 							<h5 style="margin: 0 0 10px 0; font-size: 18px;">${carro.modelo}</h5>
 							<p style="margin: 0 0 15px 0;">Tipo: ${carro.tipo}</p>
@@ -142,6 +143,13 @@
 						</div>
 					`;
 
+					const img = card.querySelector('img');
+					img.addEventListener('mouseover', () => {
+						img.style.transform = 'scale(1.05)';
+					});
+					img.addEventListener('mouseout', () => {
+						img.style.transform = 'scale(1)';
+					});
 					cardWrapper.appendChild(card);
 					lastRow.appendChild(cardWrapper);
 				});
