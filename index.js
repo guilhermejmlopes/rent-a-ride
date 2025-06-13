@@ -1,9 +1,7 @@
 const express = require('express');
 const path = require('path');
 require('dotenv').config();
-// const { CosmosClient } = require('@azure/cosmos');
 const cors = require('cors');
-
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -17,8 +15,8 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-/*
 // Cosmos DB Config
+// const { CosmosClient } = require('@azure/cosmos');
 const endpoint = process.env.COSMOS_DB_ENDPOINT;
 const key = process.env.COSMOS_DB_KEY;
 const client = new CosmosClient({ endpoint, key });
@@ -117,9 +115,6 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ message: "Erro interno." });
     }
 });
-*/
-
-// O index.html será servido automaticamente por express.static
 
 // Inicia o servidor
 app.listen(port, () => {
