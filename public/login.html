@@ -11,9 +11,9 @@
 <body style="background-color: #C5C6D0;">
 	<nav class="fixed-top navbar navbar-expand-lg" style="background-color: #111111; border: none;" data-bs-theme="dark">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="index.html">RENT-A-RIDE</a>
+			<a class="navbar-brand ps-4" href="index.html">RENT-A-RIDE</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
+			<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarColor01">
 				<ul class="navbar-nav me-auto">
@@ -40,67 +40,62 @@
 			</div>
 		</div>
 	</nav>
-	
-	<div style="height: 120px;"></div>
 
-	<div class="container-fluid py-5" style="background-color: #C5C6D0;">
+	<div class="container-fluid d-flex justify-content-center align-items-center" style="background-color: #C5C6D0; min-height: 100vh;">
 		<div class="container" style="padding: 2vh;">
 			<div class="card" style="background-color: #C5C6D0; border: none;">
 				<div class="card-body">
-					<div class="row d-flex align-items-center">
-						<div class="col-md-6 d-flex flex-column align-items-center" style="padding: 2vh;">
+					<div class="row d-flex flex-column flex-md-row align-items-center">
+						<div class="col-md-6 d-flex flex-column align-items-center mb-5 mb-md-0" style="padding: 2vh;">
 							<div class="row">
-								<h1>Bem-vindo ao RENT-A-RIDE!</h1>
+								<h1>Bem-vindo a RENT-A-RIDE!</h1>
 							</div>
 							<div class="row">
 								<h4>Ainda não criou uma conta?</h4>
 							</div>
 							<div style="text-align: center;">
-									<a href="registo.php" class="btn btn-primary" style="color: white; font-weight: bold; margin-top: 3vh; text-decoration: none; display: inline-block;">Registe-se</a>
+								<a href="registo.html" class="btn btn-primary" style="margin-top: 2vh;">Registe-se</a>
 							</div>
 						</div>
 						<div class="col-md-6 d-flex flex-column align-items-center" style="padding: 2vh;">
 							<h1 class="text-center">Login</h1>
 							<form id="login-form">
-								<div class="form-group" style="padding-top: 2vh; width: 60vh;">
-								  <input type="text" class="form-control" style="border: 1px solid #555555;" id="user" placeholder="Nome de utilizador" required>
+								<div class="form-group" style="padding-top: 2vh; width: 50vh;">
+									<input type="text" class="form-control" style="border: 1px solid #555555;" id="user" placeholder="Nome de utilizador" required>
 								</div>
-								<div class="form-group" style="padding-top: 2vh; width: 60vh;">
-								  <input type="password" class="form-control" style="border: 1px solid #555555;" id="pwd" placeholder="Palavra-passe" required>
+								<div class="form-group" style="padding-top: 2vh; width: 50vh;">
+									<input type="password" class="form-control" style="border: 1px solid #555555;" id="pwd" placeholder="Palavra-passe" required>
 								</div>
 								<div style="text-align: center;">
-								  <button type="submit" class="btn btn-primary" style="color: white; font-weight: bold; margin-top: 5vh;">Entrar</button>
+									<button type="submit" class="btn btn-primary" style="margin-top: 4vh;">Entrar</button>
 								</div>
-							  </form>
-							  <script>
-                                document.getElementById('login-form').addEventListener('submit', async function(e) {
-								  e.preventDefault();
-							  
-								  const user = document.getElementById('user').value;
-								  const pwd = document.getElementById('pwd').value;
-							  
-								  try {
-									const response = await fetch('/login', {
-									  method: 'POST',
-									  headers: { 'Content-Type': 'application/json' },
-									  body: JSON.stringify({ user, pwd })
-									});
-							  
-									const result = await response.json();
-							  
-									if (response.ok) {
-									  alert(`Bem-vindo, ${result.nome}!`);
-									  // Aqui podes guardar a sessão/localStorage e redirecionar
-									  window.location.href = '/index.html';
-									} else {
-									  alert(result.message);
+							</form>
+							<script>
+								document.getElementById('login-form').addEventListener('submit', async function(e) { 
+									e.preventDefault();
+									const user = document.getElementById('user').value;
+									const pwd = document.getElementById('pwd').value;
+
+									try {
+										const response = await fetch('/login', {
+											method: 'POST',
+											headers: { 'Content-Type': 'application/json' },
+											body: JSON.stringify({ user, pwd })
+										});
+										const result = await response.json();
+
+										if (response.ok) {
+											alert(`Bem-vindo, ${result.nome}!`);
+											window.location.href = '/index.html';
+										} else {
+											alert(result.message);
+										}
+									} catch (error) {
+										alert('Erro ao fazer login.');
+										console.error(error);
 									}
-								  } catch (error) {
-									alert('Erro ao fazer login.');
-									console.error(error);
-								  }
 								});
-							  </script>				  
+							</script>				  
 						</div>
 					</div>
 				</div>
