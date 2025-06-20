@@ -159,13 +159,15 @@
 
 	<div style="height: 40px;"></div>
 
+	<div id="footer-container"></div>
+
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-	<footer class="fixed-bottom" style="background-color: #111111; border: none;">
-		<div class="row text-center" style="margin: 3vh 0 3vh; color: white;">
-			<div class="col">Gabriel Charro</div>
-			<div class="col">Guilherme Lopes</div>
-			<div class="col">João Pires</div>
-		</div>
-	</footer>
+	<script>
+		fetch("footer.html")
+			.then(response => response.text())
+			.then(data => {
+			document.getElementById("footer-container").innerHTML = data;
+			});
+	</script>
 </body>
 </html>

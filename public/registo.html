@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<style>
-		label, span {
+		label {
 			color: #222222;
 			font-size: 1.1rem;
 		}
@@ -46,67 +46,46 @@
 			</div>
 		</div>
 	</nav>
-
+	
 	<div class="container-fluid d-flex justify-content-center align-items-center" style="background-color: #C5C6D0; min-height: 100vh;">
-		<div class="container" style="padding: 2vh;">
-			<div class="row d-flex flex-column flex-md-row align-items-center">
-				<div class="col-md-6 d-flex flex-column align-items-center mb-5 mb-md-0" style="padding: 2vh;">
-					<div class="row">
-						<h1>Bem-vindo a RENT-A-RIDE!</h1>
-					</div>
-					<div class="row">
-						<h4>Ainda não criou uma conta?</h4>
-					</div>
-					<div style="text-align: center;">
-						<a href="registo.html" class="btn btn-primary" style="margin-top: 2vh;">Registar</a>
-					</div>
+  		<div style="width: 80vw; max-width: 80vw; padding: 4vh; background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+			<h1 class="text-center mb-4">Registo</h1>
+			<form action="load_registo.php" method="post">
+				<div class="row">
+					<div class="form-group col-md-6 mb-2" style="padding-top: 2vh;">
+					<label>Nome completo *</label>
+					<input type="text" class="form-control" name="nome" placeholder="Ex.: Gabriel Charro" required>
 				</div>
-				<div class="col-md-6 d-flex flex-column align-items-center" style="padding: 2vh;">
-					<h1 class="text-center mb-2">Login</h1>
-					<form id="login-form">
-						<div class="form-group" style="padding-top: 2vh; width: 56vh;">
-							<label>Nome de utilizador *</label>
-							<input type="text" class="form-control" style="border: 1px solid #555555;" id="user" placeholder="Ex.: charro" required>
-						</div>
-						<div class="form-group" style="padding-top: 2vh; width: 56vh;">
-							<label>Palavra-passe *</label>
-							<input type="password" class="form-control" style="border: 1px solid #555555;" id="pwd" required>
-						</div>
-						<div class="d-flex justify-content-between align-items-center mt-4">
-							<span>(* indica um campo obrigatório)</span>
-							<button type="submit" class="btn btn-primary">Entrar</button>
-						</div>
-					</form>
-					<script>
-						document.getElementById('login-form').addEventListener('submit', async function(e) { 
-							e.preventDefault();
-							const user = document.getElementById('user').value;
-							const pwd = document.getElementById('pwd').value;
-
-							try {
-								const response = await fetch('/login', {
-									method: 'POST',
-									headers: { 'Content-Type': 'application/json' },
-									body: JSON.stringify({ user, pwd })
-								});
-								const result = await response.json();
-
-								if (response.ok) {
-									alert(`Bem-vindo, ${result.nome}!`);
-									window.location.href = '/index.html';
-								} else {
-									alert(result.message);
-								}
-							} catch (error) {
-								alert('Erro ao fazer login.');
-								console.error(error);
-							}
-						});
-					</script>				  
+				<div class="form-group col-md-6 mb-2" style="padding-top: 2vh;">
+					<label>Data de nascimento *</label>
+					<input type="date" class="form-control" name="data_nascimento" max="<?php echo date('Y-m-d'); ?>" required>
 				</div>
 			</div>
-		</div>
-	</div>
+				<div class="row">
+					<div class="form-group col-md-6 mb-2" style="padding-top: 2vh;">
+					<label>Número de telemóvel *</label>
+					<input type="text" class="form-control" name="telemovel" placeholder="Ex.: 960128805" required>
+				</div>
+				<div class="form-group col-md-6 mb-2" style="padding-top: 2vh;">
+					<label>Endereço de email *</label>
+					<input type="email" class="form-control" name="email" placeholder="Ex.: charro.gabriel@ipcbcampus.pt" required>
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group col-md-6 mb-2" style="padding-top: 2vh;">
+					<label>Nome de utilizador *</label>
+					<input type="text" class="form-control" name="user" placeholder="Ex.: charro" required>
+				</div>
+				<div class="form-group col-md-6 mb-2" style="padding-top: 2vh;">
+					<label>Palavra-passe *</label>
+					<input type="password" class="form-control" name="pwd" placeholder="Palavra-passe" autocomplete="off" required>
+				</div>
+			</div>
+			<div class="d-flex justify-content-between align-items-center mt-4">
+				<span>(* indica um campo obrigatório)</span>
+				<button type="submit" class="btn btn-primary">Registar</button>
+			</div>
+		</form>
   	</div>
 	
 	<div id="footer-container"></div>
