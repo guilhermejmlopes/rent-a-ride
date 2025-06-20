@@ -41,31 +41,6 @@ const tiposCombustivelContainer = client.database(databaseId).container("tipos_c
 const utilizadoresContainer = client.database(databaseId).container("utilizadores");
 
 // Endpoint - Todos os carros
-app.get('/carros', async (req, res) => {
-    try {
-        const carrosQuery = { query: "SELECT * FROM carros" };
-        const tiposCarroQuery = { query: "SELECT * FROM tipos_carro" };
-        const tiposCombustivelQuery = { query: "SELECT * FROM tipos_combustivel" };
-
-        const { resources: carros } = await carrosContainer.items.query(carrosQuery).fetchAll();
-        const { resources: tiposCarro } = await tiposCarroContainer.items.query(tiposCarroQuery).fetchAll();
-        const { resources: combustiveis } = await tiposCombustivelContainer.items.query(tiposCombustivelQuery).fetchAll();
-
-        for (let carro of carros) {
-            const tipo = tiposCarro.find(t => t.id === carro.tipo);
-            const combustivel = combustiveis.find(c => c.id === carro.combustivel);
-            if (tipo) carro.tipo = tipo.nome;
-            if (combustivel) carro.combustivel = combustivel.nome;
-        }
-
-        res.json(carros);
-    } catch (error) {
-        console.error('Erro ao obter carros:', error);
-        res.status(500).send('Erro ao obter carros');
-    }
-});
-
-// Endpoint - Carro por ID
 app.get('/carros/:id', async (req, res) => {
     const { id } = req.params;
 
@@ -76,17 +51,31 @@ app.get('/carros/:id', async (req, res) => {
 
     try {
         const { resources: carros } = await carrosContainer.items.query(query).fetchAll();
-
         if (carros.length === 0) {
             return res.status(404).json({ message: "Carro não encontrado" });
         }
 
-        return res.json(carros[0]);
+        const carro = carros[0];
+
+        const [tiposCarroData, tiposCombustivelData] = await Promise.all([
+            tiposCarroContainer.items.query("SELECT * FROM c").fetchAll(),
+            tiposCombustivelContainer.items.query("SELECT * FROM c").fetchAll()
+        ]);
+
+        const tipoCarro = tiposCarroData.resources.find(t => t.id === carro.tipo);
+        const tipoCombustivel = tiposCombustivelData.resources.find(c => c.id === carro.tipo_combustivel);
+
+        // Substitui os IDs pelos nomes
+        carro.tipo = tipoCarro ? tipoCarro.nome : carro.tipo;
+        carro.tipo_combustivel = tipoCombustivel ? tipoCombustivel.nome : carro.tipo_combustivel;
+
+        return res.json(carro);
     } catch (error) {
         console.error("Erro ao buscar carro:", error);
         return res.status(500).json({ message: "Erro interno." });
     }
 });
+
 
 // Endpoint - Tipos de carro
 app.get('/tipos_carro', async (req, res) => {
@@ -132,6 +121,32 @@ app.post('/login', async (req, res) => {
     } catch (error) {
         console.error("Erro no login:", error);
         res.status(500).json({ message: "Erro interno." });
+    }
+});
+
+// Endpoint - Carro por ID
+app.get('/carros', async (req, res) => {
+    try {
+        const carrosQuery = { query: "SELECT * FROM carros" };
+        const tiposCarroQuery = { query: "SELECT * FROM tipos_carro" };
+        const tiposCombustivelQuery = { query: "SELECT * FROM tipos_combustivel" };
+
+        const { resources: carros } = await carrosContainer.items.query(carrosQuery).fetchAll();
+        const { resources: tiposCarro } = await tiposCarroContainer.items.query(tiposCarroQuery).fetchAll();
+        const { resources: combustiveis } = await tiposCombustivelContainer.items.query(tiposCombustivelQuery).fetchAll();
+
+        for (let carro of carros) {
+            const tipo = tiposCarro.find(t => t.id === carro.tipo);
+            const combustivel = combustiveis.find(c => c.id === carro.combustivel);
+            if (tipo) carro.tipo = tipo.nome;
+            if (combustivel) carro.combustivel = combustivel.nome;
+        }
+        // Ordenar os carros por ordem alfabética (modelo)
+        carros.sort((a, b) => a.modelo.localeCompare(b.modelo));
+        res.json(carros);
+    } catch (error) {
+        console.error('Erro ao obter carros:', error);
+        res.status(500).send('Erro ao obter carros');
     }
 });
 

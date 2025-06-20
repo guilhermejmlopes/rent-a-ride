@@ -21,13 +21,13 @@
 						<a class="nav-link active" href="index.html">Home</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="sobrenos.html">Sobre nós</a>
+						<a class="nav-link" href="#">Sobre nós</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="faq.html">FAQ</a>
+						<a class="nav-link" href="#">FAQ</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="contactos.html">Contactos</a>
+						<a class="nav-link" href="#">Contactos</a>
 					</li>
 				</ul>
 				<ul class="navbar-nav ms-auto">
@@ -35,7 +35,7 @@
 						<a class="nav-link" href="login.html">Login/Registo</a>
 					</li>
 					<li class="nav-item" id="nav-dados" style="display: none;">
-						<a class="nav-link" href="dados.html">Dados pessoais</a>
+						<a class="nav-link" href="#">Dados pessoais</a>
 					</li>
 					<li class="nav-item" id="nav-logout" style="display: none;">
 						<a class="nav-link" href="#" id="logout-link">Sair</a>
@@ -71,9 +71,11 @@
 		</div>
 	</div>
 
-	<div class="card" style="background-color: #C5C6D0; border: none; padding: 4vh;">
+	<div class="card" style="background-color: #C5C6D0; border: none; padding: 2vh;">
 		<div class="card-body text-center">
-			<div class="row mb-4"><h1>Carros</h1></div>
+			<div class="row">
+				<h1>Carros</h1>
+			</div>
 			<div class="text-center mt-4" id="loading-carros" style="color: black;">
 				<h3>A carregar, aguarde...</h3>
 			</div>
@@ -127,21 +129,18 @@
 					<div style="overflow: hidden; width: 100%; height: 200px; display: flex; justify-content: center; align-items: center;">
 					<img src="img/carros/${carro.imagem}" 
 						alt="${carro.modelo}" 
-						style="width: 80%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;">
+						style="width: 80%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease;">
 					</div>
 					<div style="padding: 16px; text-align: center;">
 					<h5 style="margin: 0 0 10px 0; font-size: 18px;">${carro.modelo}</h5>
-					<p style="margin: 0 0 15px 0;">Tipo: ${carro.tipo}</p>
-					<a href="carro.html?id=${carro.id}" 
-						class="btn btn-primary btn-sm">
-						Saber mais
-					</a>
+					<p style="margin: 0 0 15px 0;">${carro.tipo}</p>
+					<a href="carro.html?id=${carro.id}" class="btn btn-primary">Saber mais</a>
 					</div>
 				`;
 
 				const img = card.querySelector('img');
 				img.addEventListener('mouseover', () => {
-					img.style.transform = 'scale(1.05)';
+					img.style.transform = 'scale(1.04)';
 				});
 				img.addEventListener('mouseout', () => {
 					img.style.transform = 'scale(1)';
@@ -150,15 +149,12 @@
 				lastRow.appendChild(cardWrapper);
 				});
 			}
-
-			// esconder loading, mostrar carros
 			document.getElementById('loading-carros').style.display = 'none';
 			containerCarros.style.display = 'flex';
-
 			} catch (error) {
-			console.error('Erro ao carregar os carros ou tipos:', error);
-			const loadingDiv = document.getElementById('loading-carros');
-			loadingDiv.textContent = 'Erro ao carregar os dados. Tente novamente mais tarde.';
+				console.error('Erro ao carregar os carros ou tipos:', error);
+				const loadingDiv = document.getElementById('loading-carros');
+				loadingDiv.textContent = 'Erro ao carregar os dados. Tente novamente mais tarde.';
 			}
 		};
 	</script>
