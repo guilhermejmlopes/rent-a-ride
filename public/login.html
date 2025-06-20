@@ -87,6 +87,7 @@
 								const response = await fetch('/login', {
 									method: 'POST',
 									headers: { 'Content-Type': 'application/json' },
+									credentials: 'include',
 									body: JSON.stringify({ user, pwd })
 								});
 								const result = await response.json();
@@ -119,5 +120,6 @@
 			document.getElementById("footer-container").innerHTML = data;
 			});
 	</script>
+	<script src="js/navbar.js"></script>
 </body>
 </html>

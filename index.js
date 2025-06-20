@@ -3,16 +3,29 @@ const path = require('path');
 require('dotenv').config();
 const cors = require('cors');
 const app = express();
+const session = require('express-session');
+
+app.use(session({
+    secret: 'segredo-super-seguro', // muda isto para algo mais seguro em produção
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, sameSite: 'lax' }                                  // em desenvolvimento
+//  cookie: { secure: process.env.NODE_ENV === 'production', sameSite: 'lax' }  // em produção
+}));
 const port = process.env.PORT || 3000;
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Cosmos DB Config
@@ -106,6 +119,12 @@ app.post('/login', async (req, res) => {
         const utilizador = utilizadores[0];
 
         if (utilizador.password === pwd) {
+            req.session.user = {
+                id: utilizador.id,
+                nome: utilizador.nome,
+                username: utilizador.username
+            };
+
             return res.json({ success: true, nome: utilizador.nome });
         } else {
             return res.status(401).json({ message: "Palavra-passe incorreta." });
@@ -114,6 +133,25 @@ app.post('/login', async (req, res) => {
         console.error("Erro no login:", error);
         res.status(500).json({ message: "Erro interno." });
     }
+});
+
+// Endpoint - Perfil
+app.get('/perfil', (req, res) => {
+    if (req.session.user) {
+        res.json({ autenticado: true, utilizador: req.session.user });
+    } else {
+        res.status(401).json({ autenticado: false, message: "Não autenticado." });
+    }
+});
+
+// Endpoint - Logout
+app.post('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ message: "Erro ao terminar sessão." });
+        }
+        res.json({ message: "Sessão terminada." });
+    });
 });
 
 // Inicia o servidor

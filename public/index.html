@@ -31,11 +31,15 @@
 					</li>
 				</ul>
 				<ul class="navbar-nav ms-auto">
-					<!--
-					<li class="nav-item"><a class="nav-link" href="logout.php">Sair</a></li>
-					<li class="nav-item"><a class="nav-link" href="login.html">Dados pessoais</a></li>
-					-->
-					<li class="nav-item"><a class="nav-link" href="login.html">Login/Registo</a></li>
+					<li class="nav-item" id="nav-login">
+						<a class="nav-link" href="login.html">Login/Registo</a>
+					</li>
+					<li class="nav-item" id="nav-dados" style="display: none;">
+						<a class="nav-link" href="dados.html">Dados pessoais</a>
+					</li>
+					<li class="nav-item" id="nav-logout" style="display: none;">
+						<a class="nav-link" href="#" id="logout-link">Sair</a>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -69,94 +73,95 @@
 
 	<div class="card" style="background-color: #C5C6D0; border: none; padding: 4vh;">
 		<div class="card-body text-center">
-			<div class="row mb-2"><h1>Carros</h1></div>
-			<div id="carros-container" class="row justify-content-center"></div>
+			<div class="row mb-4"><h1>Carros</h1></div>
+			<div class="text-center mt-4" id="loading-carros" style="color: black;">
+				<h3>A carregar, aguarde...</h3>
+			</div>
+			<div id="carros-container" class="row justify-content-center" style="display: none;"></div>
 		</div>
 	</div>
+
 	<script>
 		window.onload = async function () {
-			// Carregar os tipos de carro
 			try {
-				const responseTiposCarro = await fetch('/tipos_carro');
-				const tiposCarro = await responseTiposCarro.json();
-				const containerTiposCarro = document.getElementById('tipos-carro-container');
+			const responseTiposCarro = await fetch('/tipos_carro');
+			const tiposCarro = await responseTiposCarro.json();
+			const containerTiposCarro = document.getElementById('tipos-carro-container');
+			tiposCarro.forEach(tipo => {
+				const option = document.createElement('option');
+				option.value = tipo.id;
+				option.textContent = tipo.nome;
+				containerTiposCarro.appendChild(option);
+			});
 
-				tiposCarro.forEach(tipo => {
-					const option = document.createElement('option');
-					option.value = tipo.id;
-					option.textContent = tipo.nome;
-					containerTiposCarro.appendChild(option);
+			const responseCarros = await fetch('/carros');
+			const carros = await responseCarros.json();
+			const containerCarros = document.getElementById('carros-container');
+			containerCarros.innerHTML = '';
+
+			if (carros.length === 0) {
+				containerCarros.innerHTML = '<h3 style="text-align: center; margin-top: 4vh;">Não estão disponíveis carros de momento.</h3>';
+			} else {
+				carros.forEach((carro, index) => {
+				if (index % 3 === 0) {
+					const row = document.createElement('div');
+					row.style.display = 'flex';
+					row.style.justifyContent = 'center';
+					row.style.flexWrap = 'wrap';
+					row.style.marginBottom = '30px';
+					containerCarros.appendChild(row);
+				}
+				const lastRow = containerCarros.lastElementChild;
+
+				const cardWrapper = document.createElement('div');
+				cardWrapper.style.margin = '20px';
+
+				const card = document.createElement('div');
+				card.className = 'card rounded-2 shadow-sm';
+				card.style.width = '400px';
+				card.style.border = '1px solid #ddd';
+				card.style.overflow = 'hidden';
+				card.style.backgroundColor = '#fff';
+
+				card.innerHTML = `
+					<div style="overflow: hidden; width: 100%; height: 200px; display: flex; justify-content: center; align-items: center;">
+					<img src="img/carros/${carro.imagem}" 
+						alt="${carro.modelo}" 
+						style="width: 80%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;">
+					</div>
+					<div style="padding: 16px; text-align: center;">
+					<h5 style="margin: 0 0 10px 0; font-size: 18px;">${carro.modelo}</h5>
+					<p style="margin: 0 0 15px 0;">Tipo: ${carro.tipo}</p>
+					<a href="carro.html?id=${carro.id}" 
+						class="btn btn-primary btn-sm">
+						Saber mais
+					</a>
+					</div>
+				`;
+
+				const img = card.querySelector('img');
+				img.addEventListener('mouseover', () => {
+					img.style.transform = 'scale(1.05)';
 				});
-			} catch (error) {
-				console.error('Erro ao carregar os tipos de carro:', error);
+				img.addEventListener('mouseout', () => {
+					img.style.transform = 'scale(1)';
+				});
+				cardWrapper.appendChild(card);
+				lastRow.appendChild(cardWrapper);
+				});
 			}
 
-			// Carregar os carros
-			try {
-				const responseCarros = await fetch('/carros');
-				const carros = await responseCarros.json();
-				const containerCarros = document.getElementById('carros-container');
-				containerCarros.innerHTML = '';
+			// esconder loading, mostrar carros
+			document.getElementById('loading-carros').style.display = 'none';
+			containerCarros.style.display = 'flex';
 
-				if (carros.length === 0) {
-					containerCarros.innerHTML = '<h3 style="text-align: center; margin-top: 4vh;">Não estão disponíveis carros de momento.</h3>';
-					return;
-				}
-
-				carros.forEach((carro, index) => {
-					// Criar uma nova linha a cada 3 carros
-					if (index % 3 === 0) {
-						const row = document.createElement('div');
-						row.style.display = 'flex';
-						row.style.justifyContent = 'center';
-						row.style.flexWrap = 'wrap';
-						row.style.marginBottom = '30px';
-						containerCarros.appendChild(row);
-					}
-					const lastRow = containerCarros.lastElementChild;
-
-					const cardWrapper = document.createElement('div');
-					cardWrapper.style.margin = '20px';
-
-					const card = document.createElement('div');
-					card.className = 'card rounded-2 shadow-sm';
-					card.style.width = '400px';
-					card.style.border = '1px solid #ddd';
-					card.style.overflow = 'hidden';
-					card.style.backgroundColor = '#fff';
-
-					card.innerHTML = `
-						<div style="overflow: hidden; width: 100%; height: 200px; display: flex; justify-content: center; align-items: center;">
-							<img src="img/carros/${carro.imagem}" 
-								alt="${carro.modelo}" 
-								style="width: 80%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;">
-						</div>
-						<div style="padding: 16px; text-align: center;">
-							<h5 style="margin: 0 0 10px 0; font-size: 18px;">${carro.modelo}</h5>
-							<p style="margin: 0 0 15px 0;">Tipo: ${carro.tipo}</p>
-							<a href="carro.html?id=${carro.id}" 
-							class="btn btn-primary btn-sm">
-								Saber mais
-							</a>
-						</div>
-					`;
-
-					const img = card.querySelector('img');
-					img.addEventListener('mouseover', () => {
-						img.style.transform = 'scale(1.05)';
-					});
-					img.addEventListener('mouseout', () => {
-						img.style.transform = 'scale(1)';
-					});
-					cardWrapper.appendChild(card);
-					lastRow.appendChild(cardWrapper);
-				});
 			} catch (error) {
-				console.error('Erro ao carregar os carros:', error);
+			console.error('Erro ao carregar os carros ou tipos:', error);
+			const loadingDiv = document.getElementById('loading-carros');
+			loadingDiv.textContent = 'Erro ao carregar os dados. Tente novamente mais tarde.';
 			}
 		};
 	</script>
-
 	<div style="height: 40px;"></div>
 
 	<div id="footer-container"></div>
@@ -166,8 +171,9 @@
 		fetch("footer.html")
 			.then(response => response.text())
 			.then(data => {
-			document.getElementById("footer-container").innerHTML = data;
+				document.getElementById("footer-container").innerHTML = data;
 			});
 	</script>
+	<script src="js/navbar.js"></script>
 </body>
 </html>
