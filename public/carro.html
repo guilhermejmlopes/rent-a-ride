@@ -56,7 +56,6 @@
         async function carregarDetalhesCarro() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get("id");
-
             if (!id) {
                 document.getElementById("detalhes-carro-container").innerHTML = "<h3>ID do carro não fornecido.</h3>";
                 return;
@@ -86,9 +85,17 @@
                             <p><strong>Número de lugares:</strong> ${carro.n_lugares || "Valor indisponível"}</p>
                         </div>
                     </div>
-                    <div class="text-center mt-4">
-                        <a href="index.html" class="btn btn-primary">Alugar</a>
+                    <div class="row mt-4">
+                        <div class="form-group col-md-10" style="padding-top: 2vh;">
+                            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#assistenteModal">
+                                Perguntar ao Assistente Especial
+                            </button>
+                        </div>
+                        <div class="col-md-2 d-flex justify-content-end align-items-end" style="padding-top: 2vh;">
+                            <a href="index.html" class="btn btn-primary me-2">Alugar</a>
+                        </div>
                     </div>
+				</div>
                 `;
                 document.getElementById('loading-detalhes-carro').style.display = 'none';
                 container.style.display = 'block';
@@ -97,7 +104,75 @@
             }
         }
         carregarDetalhesCarro();
+
+        async function enviarPergunta() {
+            const input = document.getElementById("user-input");
+            const mensagem = input.value.trim();
+            if (!mensagem) return;
+
+            const chat = document.getElementById("chat-container");
+            const userDiv = document.createElement("div");
+            userDiv.innerHTML = `<strong>Você:</strong> ${mensagem}`;
+            chat.appendChild(userDiv);
+
+            input.value = "";
+            const loading = document.createElement("div");
+            loading.innerHTML = "<em>Assistente está a escrever...</em>";
+            chat.appendChild(loading);
+
+            try {
+                const resposta = await fetch("https://api.teuservidor.com/chat", { // <-- troca por tua API de backend
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ pergunta: mensagem })
+                });
+
+                const data = await resposta.json();
+                loading.remove();
+
+                const botDiv = document.createElement("div");
+                botDiv.innerHTML = `<strong>Assistente:</strong> ${data.resposta}`;
+                chat.appendChild(botDiv);
+                chat.scrollTop = chat.scrollHeight;
+            } catch (error) {
+                loading.remove();
+                const err = document.createElement("div");
+                err.innerHTML = "<strong>Erro ao contactar o assistente.</strong>";
+                chat.appendChild(err);
+            }
+        }
     </script>
+
+    <!-- Modal do Assistente -->
+    <div class="modal fade" id="assistenteModal" tabindex="-1" aria-labelledby="assistenteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assistenteModalLabel">Assistente Especial</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div id="chat-container" style="max-height: 400px; overflow-y: auto; margin-bottom: 1rem;"></div>
+                <div class="input-group" style="gap: 2vh;">
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        class="form-control" 
+                        placeholder="Escreva a sua pergunta..." 
+                        style="border: none; box-shadow: none;" 
+                    />
+                    <button 
+                        class="btn btn-info" 
+                        onclick="enviarPergunta()" 
+                        style="margin-left: 0;"
+                    >
+                        Enviar
+                    </button>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
 
 	<div id="footer-container"></div>
 
